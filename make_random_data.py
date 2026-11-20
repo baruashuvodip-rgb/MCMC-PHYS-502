@@ -1,24 +1,29 @@
 import numpy as np
+from DHO_values import DHO
+
+np.random.seed(123)
+
 A = 0.05
 gamma = 0.01
 omega = np.sqrt(1000)
+omega_prime = np.sqrt(omega**2 - gamma**2)
+phi = 0.0
 T = 2*np.pi/omega
-#cov_matrix = np.loadtxt("oscillator_covariance.txt")
 
-#L = np.linalg.cholesky(cov_matrix)
-#print("L:\n", L)
+time = np.random.uniform(0, 3*T, 50)
+np.savetxt("DHO_time.txt", time)
 
-def DHO(t):
-    omega_prime = np.sqrt(omega**2 - gamma**2)
-    phi = 0
+mu = DHO(A, omega, gamma, phi, time)
 
-    return A*np.exp(-gamma*t)*np.cos(omega_prime*t + phi)
+C = np.loadtxt("oscillator_covariance.txt")
+L = np.linalg.cholesky(C)
 
-for i in range(1000):
-    
-    time = np.random.uniform(0, 3*T, 50)
+N_samples = 1000
+N_data = 50
 
-    x = DHO(time)
+for i in range(N_samples):
+    n = np.random.normal(0.0, 1.0, N_data)
+    x = mu + np.dot(L, n)    
     with open(f"DHO_sample_{i+1}.txt","w") as file:
         for x in x:
             file.write(f"{x}\n")    
