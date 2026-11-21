@@ -151,3 +151,63 @@ fig = corner.corner(
 plt.savefig("DHO_corner_plot.png", dpi=300)
 
 plt.show()
+
+# Calculate percentiles
+percentiles = np.percentile(
+    flat_samples,
+    [16, 50, 84],
+    axis=0
+)
+
+for i, name in enumerate(parameter_names):
+
+    lower = percentiles[1, i] - percentiles[0, i]
+    upper = percentiles[2, i] - percentiles[1, i]
+
+    print(f"\n{name}:")
+    print(f"Median = {percentiles[1, i]:.6f}")
+    print(f"Lower uncertainty = {lower:.6f}")
+    print(f"Upper uncertainty = {upper:.6f}")
+
+    print(
+        f"Result = {percentiles[1, i]:.6f} "
+        f"+{upper:.6f} / -{lower:.6f}"
+    )
+
+print("Mean acceptance fraction:",
+      np.mean(sampler.acceptance_fraction))
+
+'''Truth values:
+A = 0.05
+gamma = 0.01
+omega = np.sqrt(1000) = 31.6227766017
+phi = 0.00
+
+A:
+Median = 0.051222
+Lower uncertainty = 0.000656
+Upper uncertainty = 0.000782
+Result = 0.051222 +0.000782 / -0.000656
+
+omega:
+Median = 31.492952
+Lower uncertainty = 0.070020
+Upper uncertainty = 0.068421
+Result = 31.492952 +0.068421 / -0.070020
+
+gamma:
+Median = 0.032321
+Lower uncertainty = 0.023213
+Upper uncertainty = 0.042354
+Result = 0.032321 +0.042354 / -0.023213
+
+phi:
+Median = 0.032182
+Lower uncertainty = 0.022417
+Upper uncertainty = 0.021958
+Result = 0.032182 +0.021958 / -0.022417
+Mean acceptance fraction: 0.5591'''
+
+#The maximum likelyhood parameters are quite close 
+#to the truth values chosen in the make_random_data file,
+#with all values falling within the confidence intervals.
