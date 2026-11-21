@@ -22,12 +22,7 @@ for i in range(1000):
 
     data = np.loadtxt(f"DHO_sample_{i+1}.txt")
 
-    result = minimize(
-        negative_log_likelihood,
-        initial_guess,
-        args=(time, data, inv_C),
-        method='Nelder-Mead'
-    )
+    result = minimize(negative_log_likelihood, initial_guess, args=(time, data, inv_C), method='Nelder-Mead')
 
     results.append(result.x)
 

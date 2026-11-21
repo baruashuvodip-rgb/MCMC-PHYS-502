@@ -45,7 +45,7 @@ from scipy.optimize import minimize
 
 # Load data
 time = np.loadtxt("DHO_time.txt")
-data = np.loadtxt("DHO_sample_1.txt")
+data = np.loadtxt("DHO_sample_700.txt")
 
 # Load covariance matrix
 C = np.loadtxt("oscillator_covariance.txt")
@@ -67,11 +67,7 @@ def neg_log_likelihood(params):
     return -log_likelihood(params, time, data, inv_C)
 
 
-result = minimize(
-    neg_log_likelihood,
-    initial_guess,
-    method="Nelder-Mead"
-)
+result = minimize(neg_log_likelihood, initial_guess, method="Nelder-Mead")
 
 mle_params = result.x
 
@@ -94,12 +90,7 @@ scales = np.array([
 
 pos = mle_params + scales * np.random.randn(nwalkers, ndim)
 
-sampler = emcee.EnsembleSampler(
-    nwalkers,
-    ndim,
-    log_probability,
-    args=(time, data, inv_C)
-)
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=(time, data, inv_C))
 
 # Run MCMC for 10000 steps
 sampler.run_mcmc(pos, 10000, progress=True)
@@ -153,11 +144,7 @@ plt.savefig("DHO_corner_plot.png", dpi=300)
 plt.show()
 
 # Calculate percentiles
-percentiles = np.percentile(
-    flat_samples,
-    [16, 50, 84],
-    axis=0
-)
+percentiles = np.percentile(flat_samples, [16, 50, 84], axis=0)
 
 for i, name in enumerate(parameter_names):
 
@@ -184,29 +171,29 @@ omega = np.sqrt(1000) = 31.6227766017
 phi = 0.00
 
 A:
-Median = 0.051222
-Lower uncertainty = 0.000656
-Upper uncertainty = 0.000782
-Result = 0.051222 +0.000782 / -0.000656
+Median = 0.050533
+Lower uncertainty = 0.000653
+Upper uncertainty = 0.000763
+Result = 0.050533 +0.000763 / -0.000653
 
 omega:
-Median = 31.492952
-Lower uncertainty = 0.070020
-Upper uncertainty = 0.068421
-Result = 31.492952 +0.068421 / -0.070020
+Median = 31.713326
+Lower uncertainty = 0.070100
+Upper uncertainty = 0.068773
+Result = 31.713326 +0.068773 / -0.070100
 
 gamma:
-Median = 0.032321
-Lower uncertainty = 0.023213
-Upper uncertainty = 0.042354
-Result = 0.032321 +0.042354 / -0.023213
+Median = 0.027493
+Lower uncertainty = 0.020277
+Upper uncertainty = 0.038165
+Result = 0.027493 +0.038165 / -0.020277
 
 phi:
-Median = 0.032182
-Lower uncertainty = 0.022417
-Upper uncertainty = 0.021958
-Result = 0.032182 +0.021958 / -0.022417
-Mean acceptance fraction: 0.5591'''
+Median = -0.039791
+Lower uncertainty = 0.022359
+Upper uncertainty = 0.022546
+Result = -0.039791 +0.022546 / -0.022359
+Mean acceptance fraction: 0.556815625'''
 
 #The maximum likelyhood parameters are quite close 
 #to the truth values chosen in the make_random_data file,
